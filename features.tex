@@ -1,0 +1,35 @@
+\section{Features}
+\label{sec:Features}
+    This part focuses mainly on the Chrome extension part of the tool as it contains most of important features.
+    
+    \subsection{Video quality manipulation}
+        Extension exploits a built-in feature - \textit{bitrate menu}, accessible in Netflix thanks to work of \cite{netflix-1080p} and their modifications of \textit{Cadmium Playercore} being the Netflix's video player implementation in Javascript, which allows for manipulation of audio and video bitrate and selection of Content Delivery Network (CDN) - server the content will be served from. 
+        
+        The possibility of changing video bitrate is used numerous times throughout experiment. 
+        Extension programatically simulates special keyboard key event (CTRL+ALT+SHIFT+S) to invoke bitrate menu, gains access to required HTML elements using DOM tree searching and selects video bitrate according to a value being a compromise between scenario provided through configuration file and bitrate values available for particular video. 
+
+    
+    \subsection{Debug Menu data}
+        Debug Menu is also a built-in feature but in opposite to bitrate menu it does not require any modifications of CadmiumPlayercore and is accessible using keyboard CTRL+SHIFT+ALT+D key event.
+        This feature is accessible by default and is used to gather information about state of video playback such as current audio/video bitrate, vmaf, volume or buffering audio/video bitrate and vmaf and more. Content script injected into the page screens HTML DOM tree of the page in order to find HTML element displaying desired data. Value of the element is analyzed using regular expressions in order to filter out required information.
+
+        
+    \subsection{Video quality scores}
+        Quality scores are obtained by displaying an assessment panel every defined time interval. Assessment panel covers entire screen completely blocking out video which for the time of scoring is paused. Panel consists of a question to score video quality and five buttons representing 1-5 MOS scale \cite{P.800}. After scoring quality video playback automatically resumes. Time of scoring is tracked and captured by the software.
+    
+    \subsection{Bitrate-VMAF mapping mode}
+        The tool cannot explicitly tweak Netflix player to display video with defined VMAF but it does so by manipulating video bitrate which is directly related to VMAF values. Each available bitrate corresponds to one VMAF value. VMAF values displayed in Debug Menu are average values for given video chunk encoded with particular bitrate.
+    
+        Bitrate to VMAF mapping is a process of creating relation between bitrates and VMAF values available for particular video in Netflix streaming platform. It requires \textit{empty} configuration file containing \textit{template VMAFs} being a list of VMAF values intended to be displayed during video playback. In the process bitrate to VMAF mappings are discovered and \textit{complete} configuration file is created. Complete configuration consist of a list of VMAF values being closest to values from template and their bitrate substitutes.
+
+            
+    \subsection{Main mode}
+        Mapping mode can be used to generate \textit{complete} configuration files that will be utilized in main mode. Graphical user interface makes it seamless to prepare and start experiment. After providing configuration file and clicking start button software immediately navigates to the first video specified in scenario. After loading video player all bitrate changes and quality assessment popups are scheduled to appear in defined time intervals. Video always starts from beginning. 
+    
+        During video playback subjects are restricted from certain actions within player such as: video seeking and pausing. Some of the original Netflix user interface components are removed or modified by the extension in order to enforce restrictions.
+        Bitrate changes are executed according to the generated scenario and configuration file. End of video is detected by checking for characteristics HTML element such as "See credits" button which appears near the end of every video in a TV series. After video end is detected tool redirects page to custom extension page that comes in two cases depending if there are more videos to be displayed. If there are videos left a short break can be made where subject decides when to continue by clicking \textit{Continue} button. If experiment has finished proper information is presented to the subject.
+
+    \section{Tool iterations}
+    Here we can briefly describe other iterations of the tool. FixYourNetflix, WatchingWithFriends, FixYourNetflix CrowdSource.
+    
+    - the way debug data is analyzed and gathered can be changed by using \textbf{netflix} object - not available in content script but workaround can be implemented, it could allow for more frequent data captures

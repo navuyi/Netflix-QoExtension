@@ -1,0 +1,18 @@
+\section{Architecture}
+\label{sec:Architecture}
+    The tool is designed based on current trends in web development, with a clear division between the front-end and back-end components. The front-end component is a Chrome extension, while the back-end consists of a REST API and a database.
+
+    \subsection{Chrome extension}
+        Chrome extension performs most of the actions required to conduct ecologically valid experiment which makes it the core module of the tool.
+        The tasks include video bitrate manipulation, asking subject to score video quality, capturing video playback data and more.
+        Extension was implemented using web technologies such as HTML, CSS, Javascript, Webpack, React and features user-friendly graphical interface that makes preparation and execution of the experiment seamless.
+        
+    \subsection{REST API}
+        Back-end side of the tool consist of REST API (from this point forward, referred as server) connected to a database. Server receives requests with data captured by the extension, processes it and stores in the database. Other than that, server also sends information such as database ID of currently played video to the extension in order to assign captured data accurately.
+        Server operates locally at the same machine the extension is running on, however it was designed in a way that migrating to a remote server is simply a matter of networking and minor tweaks in the code.
+        
+        Server was implemented using Python and Flask micro-framework.
+    
+    \subsection{Database}
+        Relational database was selected due to its flexibility and ease of retrieving desired information. 
+        The tool utilizes SQLite3 database because it's file based which allows for quick and simple configuration.
